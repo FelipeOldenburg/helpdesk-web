@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>HelpDesk</title><link rel="stylesheet" href="styles.css"></head>
+<body>
+  <header class="topbar"><div class="brand"><span>H</span><strong>HelpDesk</strong></div><div id="identity"></div></header>
+  <main>
+    <section id="authView" class="auth-grid">
+      <div class="intro"><p class="eyebrow">Suporte sem atrito</p><h1>Resolva solicitações com clareza.</h1><p>Abra, acompanhe e conclua chamados em um único lugar.</p><label class="api-config">URL da API<input id="apiBase" type="url" placeholder="https://sua-api.onrender.com"></label></div>
+      <div class="auth-card"><div class="tabs"><button class="tab active" data-tab="login">Entrar</button><button class="tab" data-tab="register">Cadastrar</button></div>
+        <form id="loginForm" class="stack"><label>E-mail<input name="email" type="email" required></label><label>Senha<input name="senha" type="password" required></label><button type="submit">Entrar</button></form>
+        <form id="registerForm" class="stack hidden"><label>Nome<input name="nome" required></label><label>E-mail<input name="email" type="email" required></label><label>Senha<input name="senha" type="password" minlength="6" required></label><label>Perfil<select name="papel"><option value="cliente">Cliente</option><option value="tecnico">Tecnico</option></select></label><button type="submit">Criar conta</button></form>
+      </div>
+    </section>
+    <section id="appView" class="hidden"><div class="dashboard-head"><div><p class="eyebrow">Central de atendimento</p><h1>Chamados</h1></div><button id="logout" class="ghost">Sair</button></div>
+      <p id="status" class="notice"></p>
+      <form id="ticketForm" class="panel stack hidden"><h2>Abrir chamado</h2><label>Assunto<input name="titulo" maxlength="140" required></label><label>Descreva o problema<textarea name="descricao" rows="4" required></textarea></label><button type="submit">Enviar chamado</button></form>
+      <section><div class="section-head"><h2>Fila de chamados</h2><button id="reload" class="ghost">Atualizar</button></div><div id="tickets" class="ticket-grid"></div></section>
+    </section>
+  </main>
+  <dialog id="details"><button id="closeDetails" class="close" aria-label="Fechar">×</button><div id="detailsBody"></div></dialog>
+  <script src="config.js"></script><script src="app.js"></script>
+</body></html>
