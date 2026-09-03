@@ -4,11 +4,23 @@ const apiInput = $('#apiBase');
 let token = localStorage.getItem('helpdesk_token') || '';
 let usuario = JSON.parse(localStorage.getItem('helpdesk_usuario') || 'null');
 
-apiInput.value = localStorage.getItem('helpdesk_api') || window.HELPDESK_API_URL || window.location.origin;
+apiInput.value = localStorage.getItem('helpdesk_api') || window.HELPDESK_API_URL || '';
+
+const apiBase = () => {
+  const value = apiInput.value.trim().replace(/\/$/, '');
+  if (!value) throw new Error('Informe a URL publica da API antes de continuar.');
+  try {
+    const url = new URL(value);
+    if (!['http:', 'https:'].includes(url.protocol)) throw new Error();
+    return url.toString().replace(/\/$/, '');
+  } catch {
+    throw new Error('Informe uma URL publica valida para a API.');
+  }
+};
 
 const request = async (path, options = {}) => {
   const headers = { ...(options.body ? { 'Content-Type': 'application/json' } : {}), ...(token ? { Authorization: `Bearer ${token}` } : {}) };
-  const response = await fetch(`${apiInput.value.replace(/\/$/, '')}${path}`, { ...options, headers });
+  const response = await fetch(`${apiBase()}${path}`, { ...options, headers });
   const data = await response.json().catch(() => ({}));
   if (!response.ok) throw new Error(data.error || `Erro HTTP ${response.status}`);
   return data;
@@ -42,7 +54,7 @@ const openTicket = async (id) => {
 
 document.querySelectorAll('[data-tab]').forEach((button) => button.addEventListener('click', () => { document.querySelectorAll('[data-tab]').forEach((item) => item.classList.toggle('active', item === button)); $('#loginForm').classList.toggle('hidden', button.dataset.tab !== 'login'); $('#registerForm').classList.toggle('hidden', button.dataset.tab !== 'register'); }));
 $('#registerForm').addEventListener('submit', async (event) => { event.preventDefault(); try { await request('/api/register', { method: 'POST', body: JSON.stringify(Object.fromEntries(new FormData(event.target))) }); event.target.reset(); document.querySelector('[data-tab="login"]').click(); } catch (error) { alert(error.message); } });
-$('#loginForm').addEventListener('submit', async (event) => { event.preventDefault(); localStorage.setItem('helpdesk_api', apiInput.value.replace(/\/$/, '')); try { const result = await request('/api/login', { method: 'POST', body: JSON.stringify(Object.fromEntries(new FormData(event.target))) }); token = result.token; usuario = result.usuario; localStorage.setItem('helpdesk_token', token); localStorage.setItem('helpdesk_usuario', JSON.stringify(usuario)); showApp(); } catch (error) { alert(error.message); } });
+$('#loginForm').addEventListener('submit', async (event) => { event.preventDefault(); try { localStorage.setItem('helpdesk_api', apiBase()); const result = await request('/api/login', { method: 'POST', body: JSON.stringify(Object.fromEntries(new FormData(event.target))) }); token = result.token; usuario = result.usuario; localStorage.setItem('helpdesk_token', token); localStorage.setItem('helpdesk_usuario', JSON.stringify(usuario)); showApp(); } catch (error) { alert(error.message); } });
 $('#ticketForm').addEventListener('submit', async (event) => { event.preventDefault(); try { await request('/api/chamados', { method: 'POST', body: JSON.stringify(Object.fromEntries(new FormData(event.target))) }); event.target.reset(); message('Chamado aberto com sucesso.'); await loadTickets(); } catch (error) { message(error.message, true); } });
 $('#tickets').addEventListener('click', (event) => { const button = event.target.closest('[data-open]'); if (button) openTicket(button.closest('[data-id]').dataset.id); });
 $('#reload').addEventListener('click', loadTickets);
