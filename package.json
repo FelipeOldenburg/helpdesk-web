@@ -5,7 +5,7 @@
   "description": "Frontend consumidor da HelpDesk API",
   "scripts": {
     "build": "node build.js",
-    "test": "node --check app.js && node --check build.js"
+    "test": "node --check app.js && node --check build.js && node scripts/smoke.js"
   },
   "engines": {
     "node": ">=22"

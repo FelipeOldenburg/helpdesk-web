@@ -22,9 +22,9 @@ npx serve dist
 
 | Variavel | Uso |
 | --- | --- |
-| `FRONTEND_API_URL` | URL publica da HelpDesk API, sem barra final. |
+| `FRONTEND_API_URL` | URL publica da HelpDesk API, sem barra final. Obrigatoria no deploy. |
 
-Copie `.env.example` para `.env` apenas para referencia local. O build le a variavel do ambiente do processo; na Vercel, configure-a no painel.
+Copie `.env.example` para `.env` apenas para referencia local. O build le a variavel do ambiente do processo; na Vercel, configure-a no painel. Sem essa URL, a tela pede a configuracao em vez de chamar o proprio frontend.
 
 ## Deploy na Vercel
 
